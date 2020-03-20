@@ -74,6 +74,18 @@ dropdownCitiesTo.addEventListener('click', () => {
     selectCity(event, inputCitiesTo, dropdownCitiesTo)
 });
 
+formSearch.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const formData = {
+        from: city.find((item) => inputCitiesFrom.value === item.name).code,
+        to: city.find((item) => inputCitiesTo.value === item.name).code,
+        when: inputDateDepart.value,
+    }
+
+     
+})
+
 getData(citiesApi, (data) => {
     city = JSON.parse(data).filter(item => item.name);
 }); 

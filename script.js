@@ -31,8 +31,6 @@ const getData = (url, callback) => {
     request.send();
 };
 
-
-
 const showCity = (input, list) => {
     list.textContent = '';
 
@@ -58,6 +56,27 @@ const selectCity = (event, input, list) => {
     }
 }
 
+const renderCheapDay = (cheapTicket) => {
+    console.log(cheapTicket);
+    
+};
+
+const renderCheapAll = (cheapTickets) => {
+    cheapTickets.sort((a, b)=> a.value - b.value);
+    console.log(cheapTickets);
+};
+
+const renderChip = (data, date) => {
+    const cheapTicketAll = JSON.parse(data).best_prices;
+
+    const cheapTicketDay = cheapTicketAll.filter(item => item.depart_date === date);
+
+    renderCheapDay(cheapTicketDay);
+    
+    renderCheapAll(cheapTicketAll);
+    
+};
+
 inputCitiesFrom.addEventListener('input', () => {
     showCity(inputCitiesFrom, dropdownCitiesFrom)
 });
@@ -81,10 +100,20 @@ formSearch.addEventListener('submit', (event) => {
         from: city.find((item) => inputCitiesFrom.value === item.name).code,
         to: city.find((item) => inputCitiesTo.value === item.name).code,
         when: inputDateDepart.value,
-    }
+    };
 
-     
-})
+    const requestData = `?depart_date=${formData.when}&origin=${formData.from}` + 
+    `&destination=${formData.to}&one_way=true&token=${API_KEY}`
+
+    const requestData2 = '?depart_date=' + formData.when + 
+    '&origin=' + formData.from + 
+    '&destination=' + formData.to + 
+    '&one_way=true&token=' + API_KEY;
+
+    getData(calendar + requestData, (response) => {
+        renderChip(response, formData.when)
+    });
+});
 
 getData(citiesApi, (data) => {
     city = JSON.parse(data).filter(item => item.name);
